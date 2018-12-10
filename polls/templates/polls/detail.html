@@ -1,0 +1,44 @@
+{% extends "polls/index.html" %}
+
+{% block breadcrumb %}
+<div class="row">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="page-header">
+            <h2 class="pageheader-title">{{question.id}}</h2>
+            <p class="pageheader-text">
+                {{question.question_text}}
+            </p>
+            <div class="page-breadcrumb">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">{{question.id}}</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{question.question_text}}</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock breadcrumb %}
+
+{% block content %}
+<h1>{{ question.question_text }}</h1>
+{% if error_message %}
+<p>
+    <strong>{{ error_message }}</strong>
+</p>
+{% endif %}
+<form action="{% url 'polls:vote' question.id %}" method="post">
+    {% csrf_token %}
+    {% for choice in question.choice_set.all %}
+        <label for="choice{{ forloop.counter }}" class="custom-control custom-radio">
+            <input id="choice{{ forloop.counter }}" type="radio" value="{{choice.id}}" class="custom-control-input" name="choice">
+            <span class="custom-control-label">
+                {{ choice.choice_text }}
+            </span>
+        </label>
+        <br>
+    {% endfor %}
+    <input type="submit" value="Vote">
+</form>
+{% endblock content %}
